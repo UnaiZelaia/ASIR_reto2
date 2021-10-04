@@ -10,12 +10,12 @@
 
 <body>
   <div class="main">
-    <p class="sign" align="center">Sign in</p>
+    <p class="sign" align="center">Grupo 3 <br> ASIR</p>
     <form class="form1">
-      <input class="un " type="text" align="center" placeholder="Username">
-      <input class="pass" type="password" align="center" placeholder="Password">
-      <a class="submit" align="center">Sign in</a>
-      <p class="forgot" align="center"><a href="#">Forgot Password?</p>
+      <input class="un " type="text" align="center" placeholder="Usuario">
+      <input class="pass" type="password" align="center" placeholder="Contraseña">
+      <a class="submit" align="center">Iniciar sesión</a>
+      <p class="forgot" align="center"><a href="#">Recuperar contraseña</p>
             
                 
     </div>
