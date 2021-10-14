@@ -25,7 +25,7 @@
         $_SESSION["usuario"] ->setNombreLogin($contenido["nombreLogin"]);
         $_SESSION["usuario"] ->setEmail($contenido["email"]);
         $_SESSION["usuario"] ->setFechaNacimiento($contenido["fechaNacimiento"]);                                           
-        header("Location: http://localhost/ASIR_reto2-main/AASIR_reto2-main1.1/application/home_log.php");
+        header("Location: http://localhost/ASIR_reto2-main/AASIR_reto2-main1.1/application/home_log.php"); //TODO: Cambiar a ruta relativa
         exit();
     } else{
         print("</br>Login fallido<br>");
