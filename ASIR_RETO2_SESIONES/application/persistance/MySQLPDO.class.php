@@ -36,5 +36,31 @@ class MySQLPDO {
         return $result; //devuelve el conjunto de datos de la consulta
     }
 
+    public static function insUsuario($usuario){
+        MySQLPDO::connect();
+        $sql = "INSERT INTO usuario(nombre, apellido, nombreLogin, hashContra, email, fechaNacimiento) VALUES(
+            ?, ?, ?, ?, ?, ?
+        )";
+        $params = array($usuario-> getNombre(), $usuario-> getApellido(), $usuario-> getNombreLogin(), $usuario-> getHashContra(), $usuario-> getEmail(), $usuario-> getFechaNacimiento());
+        $resultado = MySQLPDO::exec($sql, $params);
+        return $resultado;
+    }
+
+    public static function loginPDO($nombreUsuario){
+        MySQLPDO::connect();
+        $sql = "SELECT * FROM usuario WHERE nombreLogin = ?";
+        $params = array($nombreUsuario);
+        $resultado = MySQLPDO::select($sql, $params);
+        $contenido = $resultado[0];
+        return $contenido;
+    }
+
+    public static function listaUsu(){
+        MySQLPDO::connect();
+        $sql = "SELECT id, nombre, apellido, nombreLogin, email, fechaNacimiento FROM usuario";
+        $params = array();
+        $resultado = MySQLPDO::select($sql, $params);
+        return $resultado;
+    }
 }
 ?>

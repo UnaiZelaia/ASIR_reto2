@@ -2,7 +2,7 @@
     include('persistance/MySQLPDO.class.php');
     include('model/Usuario.class.php');
 
-    MySQLPDO::connect();
+    if ($_POST){
     $usuario = new usuario();
 
     $postUsuario = $_POST["usuario"];
@@ -19,18 +19,28 @@
     $usuario -> setEmail($postEmail);
     $usuario -> setFechaNacimiento($postDate);
 
-    $sql = "INSERT INTO usuario(nombre, apellido, nombreLogin, hashContra, email, fechaNacimiento) VALUES(
-        ?, ?, ?, ?, ?, ?
-    )";
-    $params = array($usuario-> getNombre(), $usuario-> getApellido(), $usuario-> getNombreLogin(), $usuario-> getHashContra(), $usuario-> getEmail(), $usuario-> getFechaNacimiento());
-    $resultado = MySQLPDO::exec($sql, $params);
-    
+    $resultado = MySQLPDO::insUsuario($usuario);
 
-    if($resultado == true){
-        header("Location: http://localhost/ASIR_reto2-main/AASIR_reto2-main1.1/application/login.php");         // IMPORTANTE MODIFICAR URL
-        exit();
-    }
-    else{
+    if($resultado != 0){
+        $nombreLogin = $usuario -> getNombreLogin();
+        $contenido = MySQLPDO::loginPDO($postUsuario, $postContra);
+
+        if(password_verify($postPass, $contenido["hashContra"]) == true){
+            session_start();
+            $_SESSION["usuario"] = new usuario;    
+            $_SESSION["usuario"] ->setNombre($contenido["nombre"]);
+            $_SESSION["usuario"] ->setApellido($contenido["apellido"]);
+            $_SESSION["usuario"] ->setNombreLogin($contenido["nombreLogin"]);
+            $_SESSION["usuario"] ->setEmail($contenido["email"]);
+            $_SESSION["usuario"] ->setFechaNacimiento($contenido["fechaNacimiento"]);
+            header("Location: http://localhost/ASIR_RETO2_SESIONES/application/home_log.php");    //TODO: Cambiar a ruta relativa
+            exit();
+        }else{
+            header("Location: http://localhost/ASIR_RETO2_SESIONES/application/ErrorLogin.php");
+            exit();
+        }
+    }else{
         print("Login fallido");
     }
+}
 ?>
