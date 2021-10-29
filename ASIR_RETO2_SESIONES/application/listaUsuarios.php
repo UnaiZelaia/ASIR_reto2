@@ -1,6 +1,8 @@
 <?php
     include('persistance/MySQLPDO.class.php');
     include('model/Usuario.class.php');  
+    session_start();
+    if(isset($_SESSION["logeado"])){
 ?>
 <html>
     <head>
@@ -18,7 +20,7 @@
         <a href="../application/listaUsuarios.php">Administrar Usuarios</a>
         <a href="#contact">Calendario</a>
         <a href="#about">Opciones</a>
-        <a class="active" href="login.php">Cerrar sesión</a>
+        <a class="active" href="terminarSesion.php">Cerrar sesión</a>
         </div>
 
         <div class="table-wrapper">
@@ -39,9 +41,10 @@
                     if(sizeof($resultado) != 0){
                         foreach($resultado as $registro){
                             extract($registro);
+                            $id64 = base64_encode($id);
                             ?>
                             <tr>
-                            <td><a href="modUsuario.php?id=<?php echo $id ?>"><?php echo $id ?></a></td>
+                            <td><a href="modUsuario.php?id=<?php echo $id64 ?>"><?php echo $id ?></a></td>
                             <td><?php echo $nombre ?></td>
                             <td><?php echo $apellido ?></td>
                             <td><?php echo $nombreLogin ?></td>
@@ -72,4 +75,7 @@ if($_POST){
     $params = array($idBorrar);
     MySQLPDO::exec($sql, $params);
 }
+    }else{
+        header("Location: errorSesion.php");
+    }
 ?>

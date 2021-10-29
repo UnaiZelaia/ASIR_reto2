@@ -12,6 +12,9 @@
 <?php
 include('persistance/MySQLPDO.class.php');
 include('model/Usuario.class.php');
+session_start();
+if(isset($_SESSION["logeado"])){ //Comprobar si el usuario está logueado
+MySQLPDO::connect();
 
 if($_POST){
   $modId = $_POST["id"];
@@ -32,26 +35,28 @@ if($_POST){
   MySQLPDO::connect();
   MySQLPDO::updateUsuario($modUsuario);
   header("Location: listaUsuarios.php");
+
+}else if(!isset($_GET["id"])){
+
+  print($_GET["id64"]);
+  die("ERROR: No se ha recibido ID de usuario");
+
+}else{  $id64 = $_GET["id"];
+
+  $id = base64_decode($id64);
+  $usuario = MySQLPDO::constUsu($id);
 }
 
-  if(!isset($_GET["id"])){
-    die("ERROR: No se ha recibido ID de usuario");
-  }
-
-  $id = $_GET["id"];
-  MySQLPDO::connect();
-  $usuario = MySQLPDO::constUsu($id);
-
-  if (!$usuario){
-    die("El usuario no existe en la base de datos");
-  }
+if (!$usuario){
+  die("El usuario no existe en la base de datos");
+}
   ?>
     <div class="topnav">
         <a class="active" href="home_log.php">Home</a>
         <a href="../application/listaUsuarios.php">Administrar Usuarios</a>
         <a href="#contact">Calendario</a>
         <a href="#about">Opciones</a>
-        <a class="active" href="login.php">Cerrar sesión</a>
+        <a class="active" href="terminarSesion.php">Cerrar sesión</a>
         </div>
 
     <div class="main">
@@ -64,9 +69,14 @@ if($_POST){
         <input name="email" class="usuario" type="email" align="center" placeholder="Correo electrónico" value="<?php echo $usuario->getEmail(); ?>"/>
         <input name="date" type="date" class="usuario" align="center" placeholder="fecha de nacimiento" value="<?php echo $usuario->getFechaNacimiento(); ?>"/>
         <input type="submit" class="submit" align=center value="modificar" />
-        <p class="forgot" align="center"><a href="modContra.php">Modificar contraseña</p>
+        <p class="forgot" align="center"><a href="modContra.php?id=<?php echo $usuario->getId(); ?>">Modificar contraseña</p>
         <input type="hidden" name="id" value="<?php echo $id?>"/>
         </form>
     </div>
 </body>
 </html>
+<?php // Esto cierra el bracket del if que chequea si el usuario está logueado
+  }else{
+    header("Location: errorSesion.php");
+}
+?>
