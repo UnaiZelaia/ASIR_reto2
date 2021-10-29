@@ -1,7 +1,7 @@
 <?php
     include('model/Usuario.class.php');
     session_start();
-
+    if(isset($_SESSION["logeado"])){
 ?>
 <html>
     <head>
@@ -16,11 +16,14 @@
         <a href="../application/listaUsuarios.php">Administrar Usuarios</a>
         <a href="#contact">Calendario</a>
         <a href="#about">Opciones</a>
-        <a class="active" href="login.php">Cerrar sesión</a>
+        <a class="active" href="terminarSesion.php">Cerrar sesión</a>
         </div>
         <?php
             $nombre = $_SESSION["usuario"] -> getNombre();
             print("<h1>Bienvenido, $nombre</h1>");
+        }else{
+            header("Location: errorSesion.php");
+        }
         ?>
 
     </body>

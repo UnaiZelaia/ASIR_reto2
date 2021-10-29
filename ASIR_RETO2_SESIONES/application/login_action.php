@@ -15,8 +15,10 @@
             $_SESSION["usuario"] ->setApellido($contenido["apellido"]);
             $_SESSION["usuario"] ->setNombreLogin($contenido["nombreLogin"]);
             $_SESSION["usuario"] ->setEmail($contenido["email"]);
-            $_SESSION["usuario"] ->setFechaNacimiento($contenido["fechaNacimiento"]);                                           
-            header("Location: home_log.php");    //TODO: Cambiar a ruta relativa
+            $_SESSION["usuario"] ->setFechaNacimiento($contenido["fechaNacimiento"]);
+            $_SESSION["usuario"] ->setHashContra($contenido["hashContra"]);   
+            $_SESSION["logeado"] = "OK";                                        
+            header("Location: home_log.php");
             exit();
     } else{
             header("Location: ErrorLogin.php");
