@@ -11,7 +11,7 @@
   <div class="main">
     <p class="sign" align="center">Grupo 3 <br> ASIR</p>
  <!-- El formulario principal para recoger información del usuario que quiera hacer login (Nombre de usuario y contraseña) y las envia mediante método POST al documento PHP que
- maneja está información. -->
+ maneja está información (login_action.php). -->
     <form class="form1" method="POST" action="login_action.php">
       <input name="usuario" class="usuario" type="text" align="center" placeholder="Usuario"/>
       <input name="pass" class="pass" type="password" align="center" placeholder="Contraseña"/>
