@@ -10,21 +10,23 @@
 </head>
 <body>
 <?php
+//Includes para las clases de MySQLPDO y Usuario.
 include('persistance/MySQLPDO.class.php');
 include('model/Usuario.class.php');
-session_start();
-if(isset($_SESSION["logeado"])){ //Comprobar si el usuario está logueado
-MySQLPDO::connect();
 
-if($_POST){
-  $modId = $_POST["id"];
-  $nombre = $_POST["nombre"];
-  $nombreLogin = $_POST["usuario"];
+//Iniciamos la sesión y comprobamos si la variable logeado está establecida. Si lo está, se ejecuta la página.
+session_start();
+if(isset($_SESSION["logeado"])){
+
+if($_POST){                         //Comprueba si se han enviado parametros mediante POST. Este código se encarga de recibir información del formulario de abajo y modificar el usuario con los parametros enviados.
+  $modId = $_POST["id"];            //Por defecto no debe ejecutarse la primera vez que se entra a la página debido a que estamos recibiendo el parametro id a través de GET
+  $nombre = $_POST["nombre"];       //Este código solo se ejecuta cuando el formulario de la linea 65 envia parametros mediante POST.
+  $nombreLogin = $_POST["usuario"]; //Primero recuperamos las variables enviadas mediante el método POST y las guardamos en variables.
   $apellido = $_POST["apellido"];
   $email = $_POST["email"];
   $fechaNacimiento = $_POST["date"];
-
-  $modUsuario = new usuario();
+                                      
+  $modUsuario = new usuario();      //Creamos un objeto usuario y establecemos sus variables a los valores enviados mediante POST.
   $modUsuario->setId($modId);
   $modUsuario->setNombre($nombre);
   $modUsuario->setApellido($apellido);
@@ -32,25 +34,23 @@ if($_POST){
   $modUsuario->setEmail($email);
   $modUsuario->setFechaNacimiento($fechaNacimiento);
 
-  MySQLPDO::connect();
-  MySQLPDO::updateUsuario($modUsuario);
-  header("Location: listaUsuarios.php");
+  MySQLPDO::updateUsuario($modUsuario); //La función updateUsuario() de MySQLPDO recibe un objeto usuario y modifica el registro del id correspondiente con los datos de ese objeto.
+  header("Location: listaUsuarios.php"); //Se reenvia al usuario a la misma página para actualizar la lista.
 
-}else if(!isset($_GET["id"])){
-
-  print($_GET["id64"]);
+}else if(!isset($_GET["id"])){          //Comprueba si el parametro id se ha pasado mediante URL con el método GET. Si no se ha enviado, lanza un error y no carga la página.
   die("ERROR: No se ha recibido ID de usuario");
-
-}else{  $id64 = $_GET["id"];
-
-  $id = base64_decode($id64);
-  $usuario = MySQLPDO::constUsu($id);
+}else{                                  //Si el parámetro es enviado
+  $id64 = $_GET["id"];                  //Se guarda en una variable 
+  $id = base64_decode($id64);           //se decodifica la codificacion de base64
+  $usuario = MySQLPDO::constUsu($id);   //Y se contruye un objeto usuario usando el id como parámetro con el nombre $usuario.
 }
 
-if (!$usuario){
-  die("El usuario no existe en la base de datos");
+if (!$usuario){                                     //Comprueba si existe un objeto usuario con nombre $usuario existe. 
+  die("El usuario no existe en la base de datos");  //Si no existe, lanza un error y no carga la página.
 }
   ?>
+  
+    <!-- Barra de navegación superior -->
     <div class="topnav">
         <a class="active" href="home_log.php">Home</a>
         <a href="../application/listaUsuarios.php">Administrar Usuarios</a>
@@ -59,6 +59,8 @@ if (!$usuario){
         <a class="active" href="terminarSesion.php">Cerrar sesión</a>
         </div>
 
+    <!-- Div que contiene el formulario principal. Muestra los valores del usuario a modificar. Si cambias un parámetro y haces click sobre modificar, este parámetro se cambia -->
+    <!-- Los datos son enviados mediante método POST y los maneja el bloque de código que comienza en la linea 21 de está página -->
     <div class="main">
     <p class="sign" align="center">Introduzca  <br> los datos<br> a modificar</p>
         <form method="POST" action="modUsuario.php">
@@ -75,8 +77,8 @@ if (!$usuario){
     </div>
 </body>
 </html>
-<?php // Esto cierra el bracket del if que chequea si el usuario está logueado
-  }else{
+<?php
+  }else{            //Si la comprobación de sesion falla, se redirige al usuario a una página de error.
     header("Location: errorSesion.php");
 }
 ?>
