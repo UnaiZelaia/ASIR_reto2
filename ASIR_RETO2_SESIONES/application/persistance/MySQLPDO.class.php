@@ -22,7 +22,6 @@ class MySQLPDO {
     
     //ejecuta sentencias INSERT, UPDATE y DELETE
     public static function exec($sql, $params) {
-        MySQLPDO::connect();
         $stmt = MySQLPDO::$base->prepare($sql);
         $stmt->execute($params);
         $result = $stmt->rowCount();
@@ -31,7 +30,6 @@ class MySQLPDO {
     
     //ejecuta sentencias SELECT
     public static function select($sql, $params) {
-        MySQLPDO::connect();
         $stmt = MySQLPDO::$base->prepare($sql);
         $stmt->execute($params);
         $result = $stmt->fetchAll();
@@ -67,7 +65,6 @@ class MySQLPDO {
 
 
     public static function constUsu($id){
-        MySQLPDO::connect();
         $sql = "SELECT * FROM usuario WHERE id = ?";
         $params = array($id);
         $resultado = MySQLPDO::select($sql, $params);
@@ -90,7 +87,6 @@ class MySQLPDO {
 
 
     public static function updateUsuario($usuario){
-        MySQLPDO::connect();
         $sql = "UPDATE usuario SET nombre=?, apellido=?, nombreLogin=?, email=?, fechaNacimiento=? WHERE id=?";
         $params = array($usuario->getNombre(), $usuario->getApellido(), $usuario->getNombreLogin(), $usuario->getEmail(), $usuario->getFechaNacimiento(), $usuario->getId());
         $resultado = MySQLPDO::exec($sql, $params);
@@ -99,7 +95,6 @@ class MySQLPDO {
 
 
     public static function updateContra($usuario){
-        MySQLPDO::connect();
         $sql = "UPDATE usuario SET hashContra=? WHERE id=?";
         $params = array($usuario->getHashContra(), $usuario->getId());
         $resultado = MySQLPDO::exec($sql, $params);

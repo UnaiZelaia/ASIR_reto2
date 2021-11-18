@@ -1,9 +1,6 @@
 <?php
-    //Includes para usar las clases usuario y MySQLPDO y susu métodos.
     include('persistance/MySQLPDO.class.php');
     include('model/Usuario.class.php');  
-
-    //Iniciamos la sesión y comprobamos si la variable de sesión logeado está establecida.
     session_start();
     if(isset($_SESSION["logeado"])){
 ?>
@@ -17,7 +14,7 @@
         <title>Lista</title>
     </head>
     <body>
-        <!-- Barra de navegación superior -->
+        
     <div class="topnav">
         <a class="active" href="home_log.php">Home</a>
         <a href="../application/listaUsuarios.php">Administrar Usuarios</a>
@@ -26,8 +23,6 @@
         <a class="active" href="terminarSesion.php">Cerrar sesión</a>
         </div>
 
-        
-        <!-- Div que contiene la lista de usuarios -->
         <div class="table-wrapper">
         <table border="1" class="fl-table">
             <thead>
@@ -41,26 +36,21 @@
             </tr>
             </thead>
                 <?php
-                    //Usamos el método listaUsu() para realizar una consulta con la base de datos que devuelva todos los usuarios que estén almacenados y
-                    //lo gurdamos en una variable. Esta variable es un array bidimensional con todos los registros de los usuario guardados en arrays.
                     $resultado = MySQLPDO::listaUsu();
 
-                    if(sizeof($resultado) != 0){                //Si la variable resultado NO está vacia (hay registros) se ejecuta el siguiente código.
-                        foreach($resultado as $registro){       //foreach loop que se ejecuta las mismas veces que registros hay.
-                            extract($registro);                 //Método extract() para generar variables desde una array de manera automática.
-                            $id64 = base64_encode($id);         //Codificamos el id en base64 para ofuscarlo un poco.
-                            ?>                                  
-                         
-                            <!-- Código que genera la lista de los usuarios. Se pinta un dato del usuario por cada casilla -->
-                            <!-- Se abre un bloque php en cada <td> de la lista en la que hacemos echo al parametro deseado -->
-                            <tr>                                        
-                            <td><a href="modUsuario.php?id=<?php echo $id64 ?>"><?php echo $id ?></a></td> <!-- Genera un link con el id del usuario y manda el id a través de la url al clicar. Reenvia a una página de modificación de usuario que usa la ID mandada por URL para saber que usuario se está modificando -->
+                    if(sizeof($resultado) != 0){
+                        foreach($resultado as $registro){
+                            extract($registro);
+                            $id64 = base64_encode($id);
+                            ?>
+                            <tr>
+                            <td><a href="modUsuario.php?id=<?php echo $id64 ?>"><?php echo $id ?></a></td>
                             <td><?php echo $nombre ?></td>
                             <td><?php echo $apellido ?></td>
                             <td><?php echo $nombreLogin ?></td>
                             <td><?php echo $email ?></td>
                             <td><?php echo $fechaNacimiento ?></td>
-                            <td><form method="post" action="listaUsuarios.php">            <!-- Boton para borrado del usuario. Última casilla de la lista -->
+                            <td><form method="post" action="listaUsuarios.php">
                                 <input type="hidden" name="id" value="<?php echo $id?>"/>
                                 <input type="submit" value="Borrar"/>
                             </form></td>
@@ -69,24 +59,23 @@
                         }
                     
                     }else{
-                        print("No se han encontrado resultados"); //Si no hay registros en la base de datos, se pinta por pantalla.
+                        print("No se han encontrado resultados");
                 }
                 ?>
         </table>
         </div>
-            <!-- Final del div que contiene la tabla -->
     </body>
 </html>
 
 
-<?php                                            //Código que maneja el borrado de los usuarios
+<?php 
 if($_POST){
-    $idBorrar = $_POST["id"];                   //Recibimos el parámetro ID mediante POST y lo usamos como parámetro de la consulta SQL para borrar el registro con ese ID.
+    $idBorrar = $_POST["id"];
     $sql = "DELETE FROM usuario WHERE id=?";
     $params = array($idBorrar);
-    MySQLPDO::exec($sql, $params);              //Método exec() de MySQLPDO que realiza la consulta contra la BBDD
+    MySQLPDO::exec($sql, $params);
 }
     }else{
-        header("Location: errorSesion.php");    //Si la comprbación de sesión falla, se redirige al usuario a una página de error.
+        header("Location: errorSesion.php");
     }
 ?>

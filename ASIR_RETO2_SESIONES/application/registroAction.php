@@ -2,8 +2,8 @@
     include('persistance/MySQLPDO.class.php');
     include('model/Usuario.class.php');
 
-    if ($_POST){                //Los datos del usuario llegan desde el formulario de registro mediante POST
-    $usuario = new usuario();   //Creamos un objeto usuario con los datos enviados por POST
+    if ($_POST){
+    $usuario = new usuario();
 
     $postUsuario = $_POST["usuario"];
     $postPass = $_POST["pass"];                                        
@@ -19,13 +19,13 @@
     $usuario -> setEmail($postEmail);
     $usuario -> setFechaNacimiento($postDate);
 
-    $resultado = MySQLPDO::insUsuario($usuario);     //Usamos el método insUsuario() para insertar los datos del objeto usuario en la base de datos
+    $resultado = MySQLPDO::insUsuario($usuario);
 
-    if($resultado != 0){                             //Si el resultado de la consulta devuelve algo (número de filas afectadas), se asume que el registro ha sido exitoso
+    if($resultado != 0){
         $nombreLogin = $usuario -> getNombreLogin();
         $contenido = MySQLPDO::loginPDO($postUsuario, $postContra);
 
-        if(password_verify($postPass, $contenido["hashContra"]) == true){    //Si la verificacion de contraseña es correcta, se construye objeto usuario como variable de sesion y se redirige a home_log.php
+        if(password_verify($postPass, $contenido["hashContra"]) == true){
             session_start();
             $_SESSION["usuario"] = new usuario;    
             $_SESSION["usuario"] ->setNombre($contenido["nombre"]);
@@ -33,7 +33,7 @@
             $_SESSION["usuario"] ->setNombreLogin($contenido["nombreLogin"]);
             $_SESSION["usuario"] ->setEmail($contenido["email"]);
             $_SESSION["usuario"] ->setFechaNacimiento($contenido["fechaNacimiento"]);
-            header("Location: home_log.php");
+            header("Location: home_log.php");    //TODO: Cambiar a ruta relativa
             exit();
         }else{
             header("Location: ErrorLogin.php");
