@@ -26,16 +26,32 @@ import com.digitalpersona.onetouch.verification.DPFPVerificationResult;
 
 public class Captura{
     public static void main(String[] args) {
+		Captura capturador = new Captura();
         listarLectores();
-        try{
+		try{
         DPFPSample huella = recibirCaptura();
         byte [] huellaSerializada = huella.serialize();
-        String huellaPrint = Arrays.toString(huellaSerializada);
-        System.out.println(huellaPrint);
-        } catch(InterruptedException e1){
-            System.out.println("Error");
+		String huellaPrint = Arrays.toString(huellaSerializada);
+
+		byte [] huellaTemp = capturador.get();
+		DPFPTemplate temp = DPFPGlobal.getTemplateFactory().createTemplate();
+		temp.deserialize(huellaTemp);
+
+
+		DPFPFeatureExtraction extractor = DPFPGlobal.getFeatureExtractionFactory().createFeatureExtraction();
+		DPFPFeatureSet features = extractor.createFeatureSet(huella, DPFPDataPurpose.DATA_PURPOSE_VERIFICATION);  
+
+		DPFPVerification verificador = DPFPGlobal.getVerificationFactory().createVerification();
+		verificador.setFARRequested(DPFPVerification.MEDIUM_SECURITY_FAR);
+		DPFPVerificationResult resultado = verificador.verify(features, temp);
+		if (resultado.isVerified() == true){
+			insert();
+		}
+        } catch(Exception e1){
+            e1.printStackTrace();
         }
-    }
+	}
+
 
     public static void listarLectores() {
         DPFPReadersCollection readers = DPFPGlobal.getReadersFactory().getReaders();
@@ -52,10 +68,11 @@ public class Captura{
     throws InterruptedException
     {
         final LinkedBlockingQueue<DPFPSample> samples = new LinkedBlockingQueue<DPFPSample>();
+
         DPFPCapture capturador = DPFPGlobal.getCaptureFactory().createCapture();
 	    capturador.setPriority(DPFPCapturePriority.CAPTURE_PRIORITY_LOW);
         capturador.addDataListener(new DPFPDataListener()
-	    { 
+	    {
 	        public void dataAcquired(DPFPDataEvent event) {
 	            if (event != null && event.getSample() != null) {
 	                try { 
@@ -92,4 +109,34 @@ public class Captura{
 	        capturador.stopCapture();
 	    } 
 	} 
+
+
+	public Connection cn() {
+		Connection conn = null;
+		try { Class.forName("com.mysql.jdbc.Driver");
+		conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/tienda2122", "tienda2122", "123");
+		} catch(Exception e) { System.out.println(e); }
+		
+		return conn;
+	}
+
+
+	public byte[] get(){ 
+		ResultSet rs;
+		PreparedStatement st;
+		byte[] digital = null;
+		try { 
+			st = cn().prepareStatement("SELECT huella FROM huellas WHERE nombre_dedo='%'");
+			rs = st.executeQuery();
+			if(rs.next())
+				digital = rs.getBytes("huella");
+			else 
+				System.out.println("Record not available");
+			 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} 
+		 
+		return digital;
+	}
     }
