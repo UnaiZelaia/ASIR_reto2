@@ -7,6 +7,9 @@ import java.util.EnumMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.Scanner;
 import java.util.Arrays;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 import com.digitalpersona.onetouch.*;
 import com.digitalpersona.onetouch.capture.DPFPCapture;
@@ -26,32 +29,52 @@ import com.digitalpersona.onetouch.verification.DPFPVerificationResult;
 
 public class Captura{
     public static void main(String[] args) {
+
 		Captura capturador = new Captura();
         listarLectores();
-		try{
-        DPFPSample huella = recibirCaptura();
-        byte [] huellaSerializada = huella.serialize();
-		String huellaPrint = Arrays.toString(huellaSerializada);
-
-		byte [] huellaTemp = capturador.get();
-		DPFPTemplate temp = DPFPGlobal.getTemplateFactory().createTemplate();
-		temp.deserialize(huellaTemp);
-
-
 		DPFPFeatureExtraction extractor = DPFPGlobal.getFeatureExtractionFactory().createFeatureExtraction();
-		DPFPFeatureSet features = extractor.createFeatureSet(huella, DPFPDataPurpose.DATA_PURPOSE_VERIFICATION);  
-
+		DPFPTemplate plantillaBBDD = DPFPGlobal.getTemplateFactory().createTemplate();
 		DPFPVerification verificador = DPFPGlobal.getVerificationFactory().createVerification();
-		verificador.setFARRequested(DPFPVerification.MEDIUM_SECURITY_FAR);
-		DPFPVerificationResult resultado = verificador.verify(features, temp);
-		if (resultado.isVerified() == true){
-			insert();
+
+		try{
+		while(true){
+        	DPFPSample huella = recibirCaptura();
+
+			ResultSet resultados = capturador.get();
+
+			while(resultados.next()){
+				byte[] huellaBBDD = resultados.getBytes("huella");
+				String nombreUsuario = resultados.getString("nombre_dedo");
+				plantillaBBDD.deserialize(huellaBBDD);
+
+				DPFPFeatureSet features = extractor.createFeatureSet(huella, DPFPDataPurpose.DATA_PURPOSE_VERIFICATION);  
+
+				verificador.setFARRequested(DPFPVerification.MEDIUM_SECURITY_FAR);
+				DPFPVerificationResult resultado = verificador.verify(features, plantillaBBDD);
+				System.out.println("\n" + resultado.isVerified());
+
+				if(resultado.isVerified() == true){
+					SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+					Date date = new Date(System.currentTimeMillis());
+
+					System.out.println(nombreUsuario + " " + formatter.format(date) );
+					break;
+					//TODO: Parar ejecucion cuando encuentre huella correspondiente.
+					//TODO: definir metodo insertarRegistro() para insertar un registro con hora y usuario.
+				}
+			}
 		}
+
         } catch(Exception e1){
             e1.printStackTrace();
         }
 	}
 
+	/**************************************************************************************************************** */
+	/**************************************************************************************************************** */
+
+
+	//Metodos definidos para la clase Captura. Autor: Unai Zelaia-Zugadi.
 
     public static void listarLectores() {
         DPFPReadersCollection readers = DPFPGlobal.getReadersFactory().getReaders();
@@ -64,6 +87,8 @@ public class Captura{
             System.out.println(readerDescription.getSerialNumber());
     }
 
+	/**************************************************************************************************************** */
+	/**************************************************************************************************************** */
     public static DPFPSample recibirCaptura() 
     throws InterruptedException
     {
@@ -110,6 +135,8 @@ public class Captura{
 	    } 
 	} 
 
+	/**************************************************************************************************************** */
+	/**************************************************************************************************************** */
 
 	public Connection cn() {
 		Connection conn = null;
@@ -120,23 +147,20 @@ public class Captura{
 		return conn;
 	}
 
+	/**************************************************************************************************************** */
+	/**************************************************************************************************************** */
 
-	public byte[] get(){ 
-		ResultSet rs;
+	public ResultSet get(){
+		ResultSet rs = null;
 		PreparedStatement st;
-		byte[] digital = null;
-		try { 
-			st = cn().prepareStatement("SELECT huella FROM huellas WHERE nombre_dedo='%'");
+		try {
+			st = cn().prepareStatement("SELECT huella, nombre_dedo FROM huellas");
 			rs = st.executeQuery();
-			if(rs.next())
-				digital = rs.getBytes("huella");
-			else 
-				System.out.println("Record not available");
-			 
-		} catch (Exception e) {
+			return rs;
+		}catch (Exception e) {
 			System.out.println(e.getMessage());
-		} 
-		 
-		return digital;
+			return rs;
+		}
 	}
-    }
+
+}
