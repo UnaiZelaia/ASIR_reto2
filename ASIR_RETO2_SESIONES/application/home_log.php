@@ -14,13 +14,13 @@
 </head>
     <body>
         <!-- Barra de navegación superior para moverse a través de la aplicación web. -->
-        <div class="topnav">
+    <div class="topnav">
         <a class="active" href="home_log.php">Home</a>
         <a href="../application/listaUsuarios.php">Administrar Usuarios</a>
-        <a href="#contact">Calendario</a>
+        <a href="../application/resumenFaltas.php">Resumen de faltas</a>
         <a href="#about">Opciones</a>
         <a class="active" href="terminarSesion.php">Cerrar sesión</a>
-        </div>
+    </div>
         
         
         <?php

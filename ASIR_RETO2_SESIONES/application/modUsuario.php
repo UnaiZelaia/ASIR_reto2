@@ -54,10 +54,10 @@ if (!$usuario){                                     //Comprueba si existe un obj
     <div class="topnav">
         <a class="active" href="home_log.php">Home</a>
         <a href="../application/listaUsuarios.php">Administrar Usuarios</a>
-        <a href="#contact">Calendario</a>
+        <a href="../application/resumenFaltas.php">Resumen de faltas</a>
         <a href="#about">Opciones</a>
         <a class="active" href="terminarSesion.php">Cerrar sesión</a>
-        </div>
+    </div>
 
     <!-- Div que contiene el formulario principal. Muestra los valores del usuario a modificar. Si cambias un parámetro y haces click sobre modificar, este parámetro se cambia -->
     <!-- Los datos son enviados mediante método POST y los maneja el bloque de código que comienza en la linea 21 de está página -->

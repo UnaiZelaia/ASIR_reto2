@@ -132,7 +132,15 @@ class MySQLPDO {
         } else { //el id no es valido, no se corresponde con ningun usuario}
            return false;
         }
+    }
 
-}
+    public static function resumenFaltas(){
+        MySQLPDO::connect();
+        $sql = "SELECT * FROM usuFaltas;";
+        $params = array();
+        $resultado = MySQLPDO::exec($sql, $params);
+        return $resultado;
+    }
+
 }
 ?>
