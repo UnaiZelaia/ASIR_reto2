@@ -17,14 +17,14 @@
     <div class="topnav">
         <a class="active" href="home_log.php">Home</a>
         <a href="listaUsuarios.php">Administrar Usuarios</a>
-        <a href=".resumenFaltas.php">Resumen de faltas</a>
+        <a href="resumenFaltas.php">Resumen de faltas</a>
         <a href="#about">Opciones</a>
         <a class="active" href="terminarSesion.php">Cerrar sesión</a>
     </div>
 
     <div>
         <form align="left" method="POST" action="resumenFaltas.php">
-        Buscar por nombre: <input type="text" name="nombre"></input>
+        Buscar por nombre: <input type="text" name="nombreUsuario" placeholder="Nombre"></input> <input type="text" name="apellidoUsuario" placeholder="Apellido"></input>
         <input type="submit" value="Buscar" name="busquedaNombre">
         </form>
         <form align="right" method="POST" action="resumenFaltas.php">
@@ -48,12 +48,12 @@
             <?php
                     //Usamos el método listaUsu() para realizar una consulta con la base de datos que devuelva todos los usuarios que estén almacenados y
                     //lo gurdamos en una variable. Esta variable es un array bidimensional con todos los registros de los usuario guardados en arrays.
-                    $resultado = MySQLPDO::buscarNombreFaltas($_POST["nombre"]);
+                    $resultado = MySQLPDO::buscarNombreFaltas($_POST["nombreUsuario"], $_POST["apellidoUsuario"]);
                     if(sizeof($resultado) != 0){                //Si la variable resultado NO está vacia (hay registros) se ejecuta el siguiente código.
                         foreach($resultado as $registro){       //foreach loop que se ejecuta las mismas veces que registros hay.
                             extract($registro);                 //Método extract() para generar variables desde una array de manera automática.
                             ?>                                  
-                         
+                        
                             <!-- Código que genera la lista de los usuarios. Se pinta un dato del usuario por cada casilla -->
                             <!-- Se abre un bloque php en cada <td> de la lista en la que hacemos echo al parametro deseado -->
                             <tr>                                        

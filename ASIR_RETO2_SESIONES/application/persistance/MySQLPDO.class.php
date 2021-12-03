@@ -144,12 +144,29 @@ class MySQLPDO {
         return $resultado;
     }
 
-    public static function buscarNombreFaltas($nombre){
+    public static function buscarNombreFaltas($nombre, $apellido){
         MySQLPDO::connect();
-        $sql = "SELECT nombre, apellido, Fecha FROM usuFaltas WHERE CONCAT(nombre, ' ', apellido) LIKE(%?%)";
-        $params = array($nombre);
-        $resultado = MySQLPDO::exec($sql, $params);
-        return $resultado;
+        if(isset($nombre) && isset($apellido))
+        {
+            $sql = "SELECT nombre, apellido, Fecha FROM usuFaltas WHERE UPPER(Nombre) LIKE(?) AND UPPER(Apellido) LIKE(?)";
+            $params = array($nombre);
+            $resultado = MySQLPDO::select($sql, $params);
+            return $resultado;
+        }
+        if(isset($nombre) && !isset($apellido))
+        {
+            $sql = "SELECT nombre, apellido, Fecha FROM usuFaltas WHERE UPPER(Nombre) LIKE(?)";
+            $params = array("%" . $nombre . "%");
+            $resultado = MySQLPDO::select($sql, $params);
+            return $resultado;
+        }
+        if(isset($apellido) && !isset($nombre))
+        {
+            $sql = "SELECT nombre, apellido, Fecha FROM usuFaltas WHERE UPPER(Apellido) LIKE(?)";
+            $params = array("%" . $apellido . "%");
+            $resultado = MySQLPDO::select($sql, $params);
+            return $resultado;
+        }
     }
 
     public static function buscarFechas($fechaInicio, $fechaFin){
@@ -164,30 +181,29 @@ class MySQLPDO {
 
     public static function buscarNombreLista($nombre, $apellido){
         MySQLPDO::connect();
-        $sql = "SELECT idUsuario, Nombre, Apellido, nombreLogin, email, FechaNaci FROM Usuario WHERE ";
-        if(isset($nombre) AND isset($apellido))
+        if(isset($nombre) && isset($apellido))
         {
-            $sql = $sql . "UPPER(Nombre) LIKE UPPER('%?%') AND UPPER(Apellido) LIKE UPPER('%?%')";
-            $params = array($nombre, $apellido);
+            $sql = "SELECT idUsuario, Nombre, Apellido, nombreLogin, email, FechaNaci FROM Usuario WHERE UPPER(Nombre) LIKE UPPER(?) AND UPPER(Apellido) LIKE UPPER(?)";
+            $params = array( "%" . $nombre . "%", "%" . $apellido . "%");
+            $resultado = MySQLPDO::select($sql, $params);
+            return $resultado;
+        }
+
+        if(isset($nombre) && !isset($apellido))
+        {
+            $sql = "SELECT idUsuario, Nombre, Apellido, nombreLogin, email, FechaNaci FROM Usuario WHERE UPPER(Nombre) LIKE UPPER(?)";
+            $params = array("%" . $nombre . "%");
             $resultado = MySQLPDO::exec($sql, $params);
             return $resultado;
         }
 
-        if(isset($nombre) AND !isset($apellido))
+        if(isset($apellido) && !isset($nombre))
         {
-            $sql = $sql . "UPPER(Nombre) LIKE UPPER('%?%')";
-            $params = array($nombre);
+            $sql = "SELECT idUsuario, Nombre, Apellido, nombreLogin, email, FechaNaci FROM Usuario WHERE UPPER(Apellido) LIKE UPPER(?)";
+            $params = array("%" . $apellido . "%");
             $resultado = MySQLPDO::exec($sql, $params);
             return $resultado;
-        }
-
-        if(isset($apellido) AND !isset($nombre))
-        {
-            $sql = $sql . "UPPER(Apellido) LIKE UPPER('%?%')";
-            $params = array($apellido);
-            $resultado = MySQLPDO::exec($sql, $params);
-            return $resultado;
-        }
+        } 
     }
 }
 ?>
