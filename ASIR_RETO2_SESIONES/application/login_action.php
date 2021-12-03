@@ -22,10 +22,10 @@
             $_SESSION["usuario"] ->setApellido($contenido["Apellido"]);
             $_SESSION["usuario"] ->setNombreLogin($contenido["nombreLogin"]);
             $_SESSION["usuario"] ->setEmail($contenido["email"]);
-            $_SESSION["usuario"] ->setFechaNacimiento($contenido["FechaNacimiento"]);
+            $_SESSION["usuario"] ->setFechaNacimiento($contenido["FechaNaci"]);
             $_SESSION["usuario"] ->setHashContra($contenido["hashContra"]);   
             $_SESSION["logeado"] = "OK";                                //Creamos esta variable de sesión para futuras comprobaciones.                         
-            header("Location: home_log.php");                           //Mandamos al usuario a la página principal de la aplicación.
+            header("Location: Home_log.php");                           //Mandamos al usuario a la página principal de la aplicación.
             exit();
     } else{
             header("Location: ErrorLogin.php");                         //Si la verificación de la contraseña falla, se redirige al usuario a una página de error.

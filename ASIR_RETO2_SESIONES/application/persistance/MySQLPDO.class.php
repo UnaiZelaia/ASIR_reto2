@@ -40,7 +40,7 @@ class MySQLPDO {
 
     public static function insUsuario($usuario){
         MySQLPDO::connect();
-        $sql = "INSERT INTO usuario(nombre, apellido, nombreLogin, hashContra, email, fechaNacimiento) VALUES(
+        $sql = "INSERT INTO Usuario(Nombre, Apellido, nombreLogin, hashContra, email, FechaNaci) VALUES(
             ?, ?, ?, ?, ?, ?
         )";
         $params = array($usuario-> getNombre(), $usuario-> getApellido(), $usuario-> getNombreLogin(), $usuario-> getHashContra(), $usuario-> getEmail(), $usuario-> getFechaNacimiento());
@@ -50,7 +50,7 @@ class MySQLPDO {
 
     public static function loginPDO($nombreUsuario){
         MySQLPDO::connect();
-        $sql = "SELECT * FROM usuario WHERE nombreLogin = ?";
+        $sql = "SELECT * FROM Usuario WHERE nombreLogin = ?";
         $params = array($nombreUsuario);
         $resultado = MySQLPDO::select($sql, $params);
         $contenido = $resultado[0];
@@ -59,7 +59,7 @@ class MySQLPDO {
 
     public static function listaUsu(){
         MySQLPDO::connect();
-        $sql = "SELECT idUsuario, nombre, apellido, nombreLogin, email, fechaNacimiento FROM usuario";
+        $sql = "SELECT idUsuario, Nombre, Apellido, nombreLogin, email, FechaNaci FROM Usuario";
         $params = array();
         $resultado = MySQLPDO::select($sql, $params);
         return $resultado;
@@ -68,7 +68,7 @@ class MySQLPDO {
 
     public static function constUsu($id){
         MySQLPDO::connect();
-        $sql = "SELECT * FROM usuario WHERE idUsuario = ?";
+        $sql = "SELECT * FROM Usuario WHERE idUsuario = ?";
         $params = array($id);
         $resultado = MySQLPDO::select($sql, $params);
 
@@ -91,7 +91,7 @@ class MySQLPDO {
 
     public static function updateUsuario($usuario){
         MySQLPDO::connect();
-        $sql = "UPDATE usuario SET nombre=?, apellido=?, nombreLogin=?, email=?, fechaNacimiento=? WHERE idUsuario=?";
+        $sql = "UPDATE Usuario SET Nombre=?, Apellido=?, nombreLogin=?, email=?, FechaNaci=? WHERE idUsuario=?";
         $params = array($usuario->getNombre(), $usuario->getApellido(), $usuario->getNombreLogin(), $usuario->getEmail(), $usuario->getFechaNacimiento(), $usuario->getId());
         $resultado = MySQLPDO::exec($sql, $params);
         return $resultado;
@@ -100,7 +100,7 @@ class MySQLPDO {
 
     public static function updateContra($usuario){
         MySQLPDO::connect();
-        $sql = "UPDATE usuario SET hashContra=? WHERE idUsuario=?";
+        $sql = "UPDATE Usuario SET hashContra=? WHERE idUsuario=?";
         $params = array($usuario->getHashContra(), $usuario->getId());
         $resultado = MySQLPDO::exec($sql, $params);
         return $resultado;
@@ -108,25 +108,27 @@ class MySQLPDO {
 
     public static function verFalta(){
         MySQLPDO::connect();
-        $sql = "SELECT idUsuario, nombre, apellido, nombreLogin, email, fechaNacimiento FROM usuario";
+        $sql = "SELECT idUsuario, Nombre, Apellido, nombreLogin, email, FechaNaci FROM Usuario";
         $params = array();
         $resultado = MySQLPDO::select($sql, $params);
         return $resultado;
     }
 
     public static function obtenerFaltas($pasarid) {
-        $sql = "SELECT * FROM registroentradas WHERE idUsuario=?";
+        $sql = "SELECT * FROM RegistroEntradas WHERE idUsuario=?";
         $params = array($pasarid->getId());
         $resultado = MySQLPDO::select($sql, $params);
         if (sizeof($resultado) !=0) { //el id se corresponde a un usuario de BBDD
             extract($resultado[0]); //extrae el primer elemento del arraym y crea vbles de forma automatica
                                     //con el mismo nombre que las columnas de la tabla de BBDD
             $faltas = new entradas();
-            $faltas->SetidEntr_Sal($identr_sal);
+            $faltas->SetidEntr_Sal($idEntr_Sal);
             $faltas->setidUsuario($idUsuario);
-            $faltas->setFecha($fecha);
-            $faltas->setHora($hora);
-            $faltas->setEntr_Sali($entr_sal);
+            $faltas->setFecha($Fecha);
+            $faltas->setHora_Sali($Hora_Sali);
+            $faltas->SetHora_Entr($Hora_Entr);
+            $faltas->setEntr($Entr);
+            $faltas->setSali($Sali);
             return $faltas;
  
         } else { //el id no es valido, no se corresponde con ningun usuario}
@@ -136,11 +138,56 @@ class MySQLPDO {
 
     public static function resumenFaltas(){
         MySQLPDO::connect();
-        $sql = "SELECT * FROM usuFaltas;";
+        $sql = "SELECT nombre, apellido, Fecha FROM usuFaltas";
         $params = array();
         $resultado = MySQLPDO::exec($sql, $params);
         return $resultado;
     }
 
+    public static function buscarNombreFaltas($nombre){
+        MySQLPDO::connect();
+        $sql = "SELECT nombre, apellido, Fecha FROM usuFaltas WHERE CONCAT(nombre, ' ', apellido) LIKE(%?%)";
+        $params = array($nombre);
+        $resultado = MySQLPDO::exec($sql, $params);
+        return $resultado;
+    }
+
+    public static function buscarFechas($fechaInicio, $fechaFin){
+        MySQLPDO::connect();
+        $sql = "SELECT nombre, apellido, Fecha FROM usuFaltas WHERE Fecha BETWEEN ? AND ?";
+        $params = array($fechaInicio, $fechaFin);
+        $resultado = MySQLPDO::exec($sql, $params);
+        return $resultado;
+    }
+
+
+
+    public static function buscarNombreLista($nombre, $apellido){
+        MySQLPDO::connect();
+        $sql = "SELECT idUsuario, Nombre, Apellido, nombreLogin, email, FechaNaci FROM Usuario WHERE ";
+        if(isset($nombre) AND isset($apellido))
+        {
+            $sql = $sql . "UPPER(Nombre) LIKE UPPER('%?%') AND UPPER(Apellido) LIKE UPPER('%?%')";
+            $params = array($nombre, $apellido);
+            $resultado = MySQLPDO::exec($sql, $params);
+            return $resultado;
+        }
+
+        if(isset($nombre) AND !isset($apellido))
+        {
+            $sql = $sql . "UPPER(Nombre) LIKE UPPER('%?%')";
+            $params = array($nombre);
+            $resultado = MySQLPDO::exec($sql, $params);
+            return $resultado;
+        }
+
+        if(isset($apellido) AND !isset($nombre))
+        {
+            $sql = $sql . "UPPER(Apellido) LIKE UPPER('%?%')";
+            $params = array($apellido);
+            $resultado = MySQLPDO::exec($sql, $params);
+            return $resultado;
+        }
+    }
 }
 ?>

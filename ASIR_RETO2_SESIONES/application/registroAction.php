@@ -1,4 +1,4 @@
- <?php
+<?php
     include('persistance/MySQLPDO.class.php');
     include('model/Usuario.class.php');
 
@@ -28,15 +28,15 @@
         if(password_verify($postPass, $contenido["hashContra"]) == true){    //Si la verificacion de contraseña es correcta, se construye objeto usuario como variable de sesion y se redirige a home_log.php
             session_start();
             $_SESSION["usuario"] = new usuario;    
-            $_SESSION["usuario"] ->setNombre($contenido["nombre"]);
-            $_SESSION["usuario"] ->setApellido($contenido["apellido"]);
+            $_SESSION["usuario"] ->setNombre($contenido["Nombre"]);
+            $_SESSION["usuario"] ->setApellido($contenido["Apellido"]);
             $_SESSION["usuario"] ->setNombreLogin($contenido["nombreLogin"]);
             $_SESSION["usuario"] ->setEmail($contenido["email"]);
-            $_SESSION["usuario"] ->setFechaNacimiento($contenido["fechaNacimiento"]);
+            $_SESSION["usuario"] ->setFechaNacimiento($contenido["FechaNaci"]);
             header("Location: home_log.php");
             exit();
         }else{
-            header("Location: ErrorLogin.php");
+            header("Location: errorLogin.php");
             exit();
         }
     }else{

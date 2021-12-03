@@ -5,7 +5,10 @@ private $idEntr_Sal;
 private $idUsuario;
 private $Fecha;
 private $Hora;
-private $Entr_Sali;
+private $Entr;
+private $Sali;
+private $Hora_Sali;
+private $Hora_Entr;
 
 
 
@@ -89,24 +92,86 @@ public function setHora($Hora)
         return $this;
 }
 
+
+
+
 /**
- * Get the value of Entr_Sali
+ * Get the value of Entr
  */ 
-public function getEntr_Sali()
+public function getEntr()
 {
-        return $this->Entr_Sali;
+return $this->Entr;
 }
 
 /**
- * Set the value of Entr_Sali
+ * Set the value of Entr
  *
  * @return  self
  */ 
-public function setEntr_Sali($Entr_Sali)
+public function setEntr($Entr)
 {
-        $this->Entr_Sali = $Entr_Sali;
+$this->Entr = $Entr;
 
-        return $this;
+return $this;
+}
+
+/**
+ * Get the value of Sali
+ */ 
+public function getSali()
+{
+return $this->Sali;
+}
+
+/**
+ * Set the value of Sali
+ *
+ * @return  self
+ */ 
+public function setSali($Sali)
+{
+$this->Sali = $Sali;
+
+return $this;
+}
+
+/**
+ * Get the value of Hora_Sali
+ */ 
+public function getHora_Sali()
+{
+return $this->Hora_Sali;
+}
+
+/**
+ * Set the value of Hora_Sali
+ *
+ * @return  self
+ */ 
+public function setHora_Sali($Hora_Sali)
+{
+$this->Hora_Sali = $Hora_Sali;
+
+return $this;
+}
+
+/**
+ * Get the value of Hora_Entr
+ */ 
+public function getHora_Entr()
+{
+return $this->Hora_Entr;
+}
+
+/**
+ * Set the value of Hora_Entr
+ *
+ * @return  self
+ */ 
+public function setHora_Entr($Hora_Entr)
+{
+$this->Hora_Entr = $Hora_Entr;
+
+return $this;
 }
 }
-?>
