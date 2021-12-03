@@ -1,7 +1,7 @@
 <html>
 
 <head>
-  <link rel="stylesheet" href="../css/Login_css.css">
+  <link rel="stylesheet" href="../css/recuperarContra.css">
   <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
@@ -10,7 +10,7 @@
 
 <body>
   <div class="main">
-    <p class="sign" align="center">Grupo 3 <br> ASIR</p>
+    <p class="sign" align="center">Introduzca sus <br> datos</p>
     <form class="form1" method="POST" action="recuperarContra.php">
       <input name="usuario" class="usuario" type="text" align="center" placeholder="Nombre de Usuario"/>
       <input name="email" class="usuario" type="text" align="center" placeholder="Introduce tu email"/>
