@@ -5,7 +5,7 @@
 
     //Iniciamos la sesión y comprobamos si la variable de sesión logeado está establecida.
     session_start();
-    if(isset($_SESSION["logeado"])){
+    if(isset($_SESSION["logeado"]) && $_SESSION["usuario"]->getRol() == 2){
 ?>
 <html>
     <head>

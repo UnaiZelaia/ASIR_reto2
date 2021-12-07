@@ -7,6 +7,7 @@
         private $nombreLogin;
         private $email;
         private $fechaNacimiento;
+        private $rol;
 
         /**
          * Get the value of id
@@ -144,6 +145,26 @@
         public function setFechaNacimiento($fechaNacimiento)
         {
                 $this->fechaNacimiento = $fechaNacimiento;
+
+                return $this;
+        }
+
+        /**
+         * Get the value of rol
+         */ 
+        public function getRol()
+        {
+                return $this->rol;
+        }
+
+        /**
+         * Set the value of rol
+         *
+         * @return  self
+         */ 
+        public function setRol($rol)
+        {
+                $this->rol = $rol;
 
                 return $this;
         }

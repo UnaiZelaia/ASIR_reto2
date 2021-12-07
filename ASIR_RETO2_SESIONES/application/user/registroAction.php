@@ -10,7 +10,12 @@
     $postNombre = $_POST["nombre"];                                        
     $postApellido = $_POST["apellido"];                                       
     $postEmail = $_POST["email"];                                        
-    $postDate = $_POST["date"];              
+    $postDate = $_POST["date"]; 
+    if(isset($_POST["radioAlumno"])){
+        $rol = 1;
+    } elseif(isset($_POST["radioProfesor"])){
+        $rol = 2;
+    }           
         
     $usuario -> setNombreLogin($postUsuario);
     $usuario -> setHashContra(password_hash($postPass, PASSWORD_DEFAULT));
@@ -18,12 +23,13 @@
     $usuario -> setApellido($postApellido);
     $usuario -> setEmail($postEmail);
     $usuario -> setFechaNacimiento($postDate);
+    $usuario -> setRol($rol);
 
     $resultado = MySQLPDO::insUsuario($usuario);     //Usamos el método insUsuario() para insertar los datos del objeto usuario en la base de datos
 
     if($resultado != 0){                             //Si el resultado de la consulta devuelve algo (número de filas afectadas), se asume que el registro ha sido exitoso
         $nombreLogin = $usuario -> getNombreLogin();
-        $contenido = MySQLPDO::loginPDO($postUsuario, $postContra);
+        $contenido = MySQLPDO::loginPDO($postUsuario, $postPass);
 
         if(password_verify($postPass, $contenido["hashContra"]) == true){    //Si la verificacion de contraseña es correcta, se construye objeto usuario como variable de sesion y se redirige a home_log.php
             session_start();
@@ -33,6 +39,7 @@
             $_SESSION["usuario"] ->setNombreLogin($contenido["nombreLogin"]);
             $_SESSION["usuario"] ->setEmail($contenido["email"]);
             $_SESSION["usuario"] ->setFechaNacimiento($contenido["FechaNaci"]);
+            $_SESSION["usuario"] ->setRol($contenido["idRol"]);
             header("Location: home_log.php");
             exit();
         }else{

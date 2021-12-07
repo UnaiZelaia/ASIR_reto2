@@ -1,5 +1,5 @@
 <?php
-class entradas {
+class Entradas {
 
 private $idEntr_Sal;
 private $idUsuario;

@@ -16,7 +16,7 @@ include('../model/Usuario.class.php');
 
 //Iniciamos la sesión y comprobamos si la variable logeado está establecida. Si lo está, se ejecuta la página.
 session_start();
-if(isset($_SESSION["logeado"])){
+if(isset($_SESSION["logeado"]) && $_SESSION["usuario"]->getRol() == 2){
 
 if($_POST){                         //Comprueba si se han enviado parametros mediante POST. Este código se encarga de recibir información del formulario de abajo y modificar el usuario con los parametros enviados.
   $modId = $_POST["id"];            //Por defecto no debe ejecutarse la primera vez que se entra a la página debido a que estamos recibiendo el parametro id a través de GET

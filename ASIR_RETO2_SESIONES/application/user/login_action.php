@@ -24,6 +24,7 @@
             $_SESSION["usuario"] ->setEmail($contenido["email"]);
             $_SESSION["usuario"] ->setFechaNacimiento($contenido["FechaNaci"]);
             $_SESSION["usuario"] ->setHashContra($contenido["hashContra"]);   
+            $_SESSION["usuario"] ->setRol($contenido["idRol"]);
             $_SESSION["logeado"] = "OK";                                //Creamos esta variable de sesión para futuras comprobaciones.                         
             header("Location: Home_log.php");                           //Mandamos al usuario a la página principal de la aplicación.
             exit();

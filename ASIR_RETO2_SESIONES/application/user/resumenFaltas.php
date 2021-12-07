@@ -5,7 +5,7 @@
 
     //Iniciamos la sesion y comprobamos si la variable logeado está establecida. Si lo está, la página se carga. sino, se redirige al usuario a una página de error.
     session_start();
-    if(isset($_SESSION["logeado"])){    //Método isset de PHP para comprobar si la variable logeado está establecida.
+    if(isset($_SESSION["logeado"]) && $_SESSION["usuario"]->getRol() == 2){    //Método isset de PHP para comprobar si la variable logeado está establecida.
 ?>
 <html>
     <head>
@@ -140,6 +140,8 @@
                 }
             }
                 ?>
-<?php } ?>
+<?php }else{
+    header("Location: errorSesion.php");
+} ?>
 
     

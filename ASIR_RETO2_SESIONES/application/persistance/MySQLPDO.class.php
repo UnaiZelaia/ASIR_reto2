@@ -40,10 +40,10 @@ class MySQLPDO {
 
     public static function insUsuario($usuario){
         MySQLPDO::connect();
-        $sql = "INSERT INTO Usuario(Nombre, Apellido, nombreLogin, hashContra, email, FechaNaci) VALUES(
-            ?, ?, ?, ?, ?, ?
+        $sql = "INSERT INTO Usuario(Nombre, Apellido, nombreLogin, hashContra, email, FechaNaci, idRol) VALUES(
+            ?, ?, ?, ?, ?, ?, ?
         )";
-        $params = array($usuario-> getNombre(), $usuario-> getApellido(), $usuario-> getNombreLogin(), $usuario-> getHashContra(), $usuario-> getEmail(), $usuario-> getFechaNacimiento());
+        $params = array($usuario-> getNombre(), $usuario-> getApellido(), $usuario-> getNombreLogin(), $usuario-> getHashContra(), $usuario-> getEmail(), $usuario-> getFechaNacimiento(), $usuario-> getRol());
         $resultado = MySQLPDO::exec($sql, $params);
         return $resultado;
     }
@@ -80,7 +80,7 @@ class MySQLPDO {
             $usuario ->setApellido($Apellido);
             $usuario ->setNombreLogin($nombreLogin);
             $usuario ->setEmail($email);
-            $usuario ->setFechaNacimiento($FechaNacimiento);
+            $usuario ->setFechaNacimiento($FechaNaci);
             $usuario ->setHashContra($hashContra);
             return $usuario;
         }else{
@@ -106,10 +106,10 @@ class MySQLPDO {
         return $resultado;
     }
 
-    public static function verFalta(){
+    public static function verFaltas($idUsuario){
         MySQLPDO::connect();
-        $sql = "SELECT idUsuario, Nombre, Apellido, nombreLogin, email, FechaNaci FROM Usuario";
-        $params = array();
+        $sql = "SELECT idEntr_Sal, idUsuario, Fecha, Hora_Entr  FROM RegistroEntradas WHERE idUsuario=?";
+        $params = array($idUsuario);
         $resultado = MySQLPDO::select($sql, $params);
         return $resultado;
     }

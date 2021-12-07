@@ -15,7 +15,13 @@
         <input name="nombre" class="usuario" type="text" align="center" placeholder="Nombre"/>
         <input name="apellido" class="usuario" type="text" align="center" placeholder="Apellidos"/>
         <input name="email" class="usuario" type="email" align="center" placeholder="Correo electrónico"/>
-        <input name="date" type="date" class="usuario" align="center" placeholder="fecha de nacimiento"/>
+        <input name="date" type="date" class="usuario" align="center" placeholder="fecha de nacimiento"/><br>
+        <div align="center">
+          <input name ="radioAlumno" type="radio" value="Elige rol" align="center" id="radioAlumno" />
+            <label for="radioAlumno">Alumno</label>
+          <input name ="radioProfesor" type="radio" value="Elige rol" align="center" id="radioProfesor" />
+            <label for="radioProfesor">Profesor</label>
+        </div>
         <input type="submit" class="submit" align=center value="Registrarse" />
         <p class="forgot" align="center"><a href="Login.php">Volver a la página de login</p> <!-- TODO: radio button con opción de alumno o profesor-->
         </form>

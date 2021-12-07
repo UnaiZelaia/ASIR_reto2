@@ -10,7 +10,7 @@
 </head>
 <?php
     session_start();                    //Iniciamos la session y comprobamos si el usuario está logeado.
-    if(isset($_SESSION["logeado"])){    //Si la comprobación de sesión es correcta, se muestra la página.
+    if(isset($_SESSION["logeado"]) && $_SESSION["usuario"]->getRol() == 2){    //Si la comprobación de sesión es correcta, se muestra la página.
 ?>
 <body>
     <!-- Barra de navegación superior -->
